@@ -137,7 +137,7 @@ bool scene_intersect(const Vec3f& origin, const Vec3f& dir, Vec3f& hit, Vec3f& N
             min_distance = d;
             hit = pt;
             N = Vec3f(0.f, 1.f, 0.f);
-            material = white_wall;    
+            material = mirror;    
         }
     }
     // back
@@ -164,28 +164,28 @@ bool scene_intersect(const Vec3f& origin, const Vec3f& dir, Vec3f& hit, Vec3f& N
         }
     }
 
-    //// top
-    //if (fabs(dir.y) > 1e-3) {
-    //    float d = -(origin.y - 10) / dir.y;
-    //    Vec3f xt = origin + dir * d;
-    //    if (d > 0 && fabs(xt.x) < 10 && xt.z < 0 && xt.z>-30 && d < min_distance) {
-    //        min_distance = d;
-    //        hit = xt;
-    //        N = Vec3f(0.f, -1.f, 0.f);
-    //        material = white_wall;
-    //    }
-    //}
-    //// right
-    //if (fabs(dir.x) > 1e-3) {
-    //    float d = -(origin.x - 10) / dir.x; 
-    //    Vec3f xt = origin + dir * d;
-    //    if (d > 0 && xt.y > -4 && xt.y < 10 && xt.z < 0 && xt.z>-30 && d < min_distance) {
-    //        min_distance = d;
-    //        hit = xt;
-    //        N = Vec3f(-1.f, 0.f, 0.f);
-    //        material = green_wall;   
-    //    }
-    //}
+    // top
+    if (fabs(dir.y) > 1e-3) {
+        float d = -(origin.y - 10) / dir.y;
+        Vec3f xt = origin + dir * d;
+        if (d > 0 && fabs(xt.x) < 10 && xt.z < 0 && xt.z>-30 && d < min_distance) {
+            min_distance = d;
+            hit = xt;
+            N = Vec3f(0.f, -1.f, 0.f);
+            material = white_wall;
+        }
+    }
+    // right
+    if (fabs(dir.x) > 1e-3) {
+        float d = -(origin.x - 10) / dir.x; 
+        Vec3f xt = origin + dir * d;
+        if (d > 0 && xt.y > -4 && xt.y < 10 && xt.z < 0 && xt.z>-30 && d < min_distance) {
+            min_distance = d;
+            hit = xt;
+            N = Vec3f(-1.f, 0.f, 0.f);
+            material = green_wall;   
+        }
+    }
 
     return min_distance < 1000;
 }
@@ -227,20 +227,20 @@ Vec3f trace_ray(const Vec3f& orig, const Vec3f& dir, size_t depth = 0) {
 
 
 void initScene() {
-    //Material ivory(1.0, Vec4f(0.6, 0.3, 0.1, 0.0), Vec3f(0.4, 0.4, 0.3), 50.);
-    //Material glass(2.5, Vec4f(0.8, 0.5, 0.1, 1.0), Vec3f(0.1, 0.1, 0.7), 12.);
-    const Material red_rubber = { 1.0, {1, 0, 0.0, 0.0}, {0.3, 0.1, 0.1},   10. };
-    const Material mirror = { 1.0, {0.0, 10.0, 0.8, 0.0}, {1.0, 1.0, 1.0}, 1425. };
+    Material ivory(1.0, Vec4f(0.6, 0.3, 0.1, 0.0), Vec3f(0.4, 0.4, 0.3), 50.);
+    Material glass(2.5, Vec4f(0.8, 0.5, 0.1, 1.0), Vec3f(1, 1, 1), 12.);
+    Material red_rubber = { 1.0, {1, 0, 0.0, 0.0}, {0.3, 0.1, 0.1},   10. };
+    Material mirror = { 1.0, {0.0, 10.0, 0.8, 0.0}, {1.0, 1.0, 1.0}, 1425. };
     Material white_wall = Material(0, Vec4f(1, 0, 0.0, 0.0), Vec3f(0.507, 0.507, 0.513), 0);
 
-    /*spheres.push_back(Sphere(Vec3f(-3, 0, -16), 2, ivory));*/
-    //spheres.push_back(Sphere(Vec3f(-5, 0, -10), 2, white_wall));
-    spheres.push_back(Sphere(Vec3f(-2, 1, -18), 3, red_rubber));
-    //spheres.push_back(Sphere(Vec3f(0, -2, -9), 1, glass));
+    spheres.push_back(Sphere(Vec3f(7, 7, -16), 2, ivory));
+    spheres.push_back(Sphere(Vec3f(-5, 0, -10), 2, mirror));
+    spheres.push_back(Sphere(Vec3f(-3, 1, -18), 3, red_rubber));
+    spheres.push_back(Sphere(Vec3f(6, -2, -13), 2, glass));
 
 
-    //lights.push_back(Light(Vec3f(0, 9.9, -15), 1000));
-    lights.push_back(Light(Vec3f(10, 1, -18), 1000));
+    lights.push_back(Light(Vec3f(0, 9.9, -15), 1000));
+    lights.push_back(Light(Vec3f(0, 2, 30), 2000));
     //lights.push_back(Light(Vec3f(30, 20, 30), 1.7));
 };
 
@@ -290,11 +290,11 @@ void saveAsTXT() {
 
 
 void render() {
-    const float fov = M_PI / 3;
+    const float fov = M_PI / 6;
 
     int pixels_amount = width * height;
     int count = 0;
-    Vec3f camera_position = Vec3f(0, 2, 2);
+    Vec3f camera_position = Vec3f(0, 2, 20);
 
 
 

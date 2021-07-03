@@ -14,3 +14,7 @@
 
 ## Примеры
 
+![plot](Examles/Cornel_1.png)
+![plot](Examles/Cornel_2.png)
+![plot](Examles/Cornel_3.png)
+
